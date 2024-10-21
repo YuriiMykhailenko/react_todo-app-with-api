@@ -95,7 +95,7 @@ export const Header: FC<Props> = ({
 
   return (
     <header className="todoapp__header">
-      {todos.length && (
+      {!!todos.length && (
         <button
           type="button"
           className={cn('todoapp__toggle-all', { active: isAllTodosCompleted })}
