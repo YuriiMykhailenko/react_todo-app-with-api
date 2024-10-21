@@ -15,7 +15,7 @@ interface Props {
   onDeleteTodo: (ids: number[]) => void;
 }
 
-export const ToodoList: FC<Props> = ({
+export const TodoList: FC<Props> = ({
   todos,
   tempTodo,
   todosForUpdate,

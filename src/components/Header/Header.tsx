@@ -85,12 +85,11 @@ export const Header: FC<Props> = ({
       .then(res => {
         setTodos(current => [...current, res]);
         setText('');
-        setTempTodo(null);
       })
       .catch(() => {
-        setTempTodo(null);
         handleError(setError, ErrorMessages.AddFail);
-      });
+      })
+      .finally(() => setTempTodo(null));
   }
 
   return (

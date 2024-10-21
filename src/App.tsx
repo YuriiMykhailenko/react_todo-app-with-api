@@ -1,11 +1,11 @@
-import { FC, useEffect, useMemo, useState } from 'react';
+import { FC, useCallback, useEffect, useMemo, useState } from 'react';
 
 import { FilterOptions } from './utils/FilterOptions';
 import { getFilteredTodos } from './utils/GetFilteredTodos';
 import { handleError } from './utils/utils';
 
 import { deleteTodo, getTodos, patchTodo } from './api/todos';
-import { ToodoList } from './components/TodoList';
+import { TodoList } from './components/TodoList';
 import { Footer } from './components/Footer';
 import { ErrorNotification } from './components/ErrorNotification';
 import { Header } from './components/Header';
@@ -23,7 +23,7 @@ export const App: FC = () => {
     FilterOptions.All,
   );
 
-  const handleDeleteTodos = (ids: number[]) => {
+  const handleDeleteTodos = useCallback((ids: number[]) => {
     Promise.all(
       ids.map(id => {
         setIdsForDelete(current => [...current, id]);
@@ -40,35 +40,38 @@ export const App: FC = () => {
           );
       }),
     );
-  };
+  }, []);
 
-  const handleChangeTodos = (newTodos: Todo[]) => {
-    return Promise.all(
-      newTodos.map(todo => {
-        setTodosForUpdate(current => [...current, todo]);
+  const handleChangeTodos = useCallback(
+    (newTodos: Todo[]) => {
+      return Promise.all(
+        newTodos.map(todo => {
+          setTodosForUpdate(current => [...current, todo]);
 
-        const { id, ...todoBody } = todo;
+          const { id, ...todoBody } = todo;
 
-        return patchTodo(todoBody, id)
-          .then(() => {
-            setTodos(current =>
-              current.map(currentTodo => {
-                return currentTodo.id !== todo.id ? currentTodo : todo;
-              }),
-            );
-          })
-          .catch(() => {
-            handleError(setError, ErrorMessages.UpdateFail);
-            throw new Error(error);
-          })
-          .finally(() => setTodosForUpdate([]));
-      }),
-    );
-  };
+          return patchTodo(todoBody, id)
+            .then(() => {
+              setTodos(current =>
+                current.map(currentTodo => {
+                  return currentTodo.id !== todo.id ? currentTodo : todo;
+                }),
+              );
+            })
+            .catch(() => {
+              handleError(setError, ErrorMessages.UpdateFail);
+              throw new Error(error);
+            })
+            .finally(() => setTodosForUpdate([]));
+        }),
+      );
+    },
+    [error],
+  );
 
-  function hideError() {
+  const hideError = useCallback(() => {
     return setError(ErrorMessages.None);
-  }
+  }, []);
 
   useEffect(() => {
     getTodos()
@@ -102,9 +105,9 @@ export const App: FC = () => {
           onTodosChange={handleChangeTodos}
         />
 
-        {!!todos.length && (
+        {(!!todos.length || tempTodo) && (
           <>
-            <ToodoList
+            <TodoList
               todos={filteredTodos}
               tempTodo={tempTodo}
               todosForUpdate={todosForUpdate}
