@@ -8,9 +8,9 @@ interface Props {
   todo: Todo;
   todosForUpdate?: Todo[];
   idsForDelete?: number[];
+  error?: ErrorMessages;
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   onTodosChange?: any;
-  setError?: React.Dispatch<React.SetStateAction<ErrorMessages>>;
   onDeleteTodo?: (ids: number[]) => void;
 }
 
@@ -18,6 +18,7 @@ export const TodoInfo: FC<Props> = ({
   todo,
   todosForUpdate,
   idsForDelete,
+  error,
   onTodosChange = () => {},
   onDeleteTodo = () => {},
 }) => {
@@ -31,9 +32,7 @@ export const TodoInfo: FC<Props> = ({
       setIsEditing(false);
 
       return;
-    }
-
-    if (!newTitle) {
+    } else if (!newTitle) {
       onDeleteTodo([todo.id]);
 
       return;
@@ -44,9 +43,7 @@ export const TodoInfo: FC<Props> = ({
       title: newTitle.trim(),
     };
 
-    onTodosChange([updatedTodo])
-      .then(() => setIsEditing(false))
-      .catch(() => {});
+    onTodosChange([updatedTodo]).then(() => setIsEditing(false));
   };
 
   const handlePressEscape = (key: string) => {
@@ -76,7 +73,7 @@ export const TodoInfo: FC<Props> = ({
 
   useEffect(() => {
     inputRef.current?.focus();
-  }, [isEditing]);
+  }, [isEditing, error]);
 
   return (
     <>

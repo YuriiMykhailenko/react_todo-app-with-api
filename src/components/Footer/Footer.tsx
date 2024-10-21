@@ -1,5 +1,5 @@
 import { FC, Dispatch, SetStateAction } from 'react';
-import { FilterOptions } from '../../utils/FilterOptions';
+import { FilterOptions } from '../../types/FilterOptions';
 import cn from 'classnames';
 
 interface Props {

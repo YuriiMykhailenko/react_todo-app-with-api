@@ -1,5 +1,5 @@
 import { Todo } from '../types/Todo';
-import { FilterOptions } from './FilterOptions';
+import { FilterOptions } from '../types/FilterOptions';
 
 export function getFilteredTodos(
   todos: Todo[],

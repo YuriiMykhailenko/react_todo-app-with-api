@@ -6,16 +6,16 @@ import {
   useRef,
   useEffect,
 } from 'react';
+import cn from 'classnames';
+
 import { Todo } from '../../types/Todo';
 import { ErrorMessages } from '../../types/ErrorMessages';
 import { postTodo, USER_ID } from '../../api/todos';
-import { handleError } from '../../utils/utils';
-import cn from 'classnames';
 
 interface Props {
   setTempTodo: Dispatch<SetStateAction<Todo | null>>;
   setTodos: Dispatch<SetStateAction<Todo[]>>;
-  setError: Dispatch<SetStateAction<ErrorMessages>>;
+  onSetError: (newError: ErrorMessages) => void;
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   onTodosChange: any;
   tempTodo: Todo | null;
@@ -23,7 +23,7 @@ interface Props {
 }
 
 export const Header: FC<Props> = ({
-  setError,
+  onSetError,
   setTempTodo,
   setTodos,
   onTodosChange,
@@ -67,7 +67,7 @@ export const Header: FC<Props> = ({
     const inputValue = text.trim();
 
     if (!inputValue) {
-      handleError(setError, ErrorMessages.EmptyTitle);
+      onSetError(ErrorMessages.EmptyTitle);
 
       return;
     }
@@ -87,7 +87,7 @@ export const Header: FC<Props> = ({
         setText('');
       })
       .catch(() => {
-        handleError(setError, ErrorMessages.AddFail);
+        onSetError(ErrorMessages.AddFail);
       })
       .finally(() => setTempTodo(null));
   }

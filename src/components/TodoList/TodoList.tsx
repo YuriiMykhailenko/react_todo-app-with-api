@@ -10,7 +10,7 @@ interface Props {
   tempTodo: Todo | null;
   todosForUpdate: Todo[];
   idsForDelete: number[];
-  setError: React.Dispatch<React.SetStateAction<ErrorMessages>>;
+  error: ErrorMessages;
   onTodosChange: (newTodos: Todo[]) => void;
   onDeleteTodo: (ids: number[]) => void;
 }
@@ -20,8 +20,8 @@ export const TodoList: FC<Props> = ({
   tempTodo,
   todosForUpdate,
   idsForDelete,
+  error,
   onTodosChange,
-  setError,
   onDeleteTodo,
 }) => {
   return (
@@ -31,11 +31,11 @@ export const TodoList: FC<Props> = ({
           <TodoInfo
             todo={todo}
             key={todo.id}
-            setError={setError}
             todosForUpdate={todosForUpdate}
             onTodosChange={onTodosChange}
             idsForDelete={idsForDelete}
             onDeleteTodo={onDeleteTodo}
+            error={error}
           />
         );
       })}
